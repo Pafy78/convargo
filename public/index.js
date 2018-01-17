@@ -15,7 +15,7 @@ var truckers = [{
 }, {
     'id': '6e06c9c0-4ab0-4d66-8325-c5fa60187cf8',
     'name': 'xpo',
-    'pricePerKm': 0.10,
+    'pricePerKm': 0.1,
     'pricePerVolume': 10
 }];
 
@@ -157,22 +157,24 @@ function ComputePrice(){
 function GetPrice(deliverie){
     var distance, volume, trucker, volumePrice;
     trucker = truckers.find(function(element){
-        return element.id = deliverie.truckerId;
+        if(element.id == deliverie.truckerId){
+            return element;
+        }
     });
+
     distance = trucker.pricePerKm * deliverie.distance;
-    if(deliverie.volume > 25){
-        volumePrice = trucker.pricePerVolume - (trucker.pricePerVolume * 0.5);
+    volumePrice = trucker.pricePerVolume;
+    if(deliverie.volume > 5){
+        volumePrice = trucker.pricePerVolume - (trucker.pricePerVolume * 0.1);
     }
-    else if(deliverie.volume > 10){
+    if(deliverie.volume > 10){
         volumePrice = trucker.pricePerVolume - (trucker.pricePerVolume * 0.3);
     }
-    else if(deliverie.volume > 5){
-        volumePrice = trucker.pricePerVolume - (trucker.pricePerVolume * 0.1);
+    if(deliverie.volume > 25){
+        volumePrice = trucker.pricePerVolume - (trucker.pricePerVolume * 0.5);
     } 
-    else{
-        volumePrice = trucker.pricePerVolume;
-    }
-    volume = trucker.pricePerVolume * deliverie.volume;
+    volume = volumePrice * deliverie.volume;
+    
     return distance + volume;
 }
 function UpdateCommission(deliverie){
@@ -192,12 +194,13 @@ function ApplyDeductibleOption(deliverie){
 
 
 
+
 ComputePrice();
 
 
-console.log(truckers);
+//console.log(truckers);
 console.log(deliveries);
-console.log(actors);
+//console.log(actors);
 
 
 
