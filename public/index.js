@@ -146,12 +146,13 @@ const actors = [{
 
 
 
-function ComputePrice(){
+function UpdateAllValues(){
     deliveries.forEach(function(deliverie){
         deliverie.price = GetPrice(deliverie);
         deliverie = UpdateCommission(deliverie);
         deliverie = ApplyDeductibleOption(deliverie);
     });
+    UpdateActors();
 }
 
 function GetPrice(deliverie){
@@ -174,33 +175,57 @@ function GetPrice(deliverie){
         volumePrice = trucker.pricePerVolume - (trucker.pricePerVolume * 0.5);
     } 
     volume = volumePrice * deliverie.volume;
-    
+
     return distance + volume;
 }
 function UpdateCommission(deliverie){
     var commission = deliverie.price * 0.3;
-    
+
     deliverie.commission.insurance = commission / 2;
     deliverie.commission.treasury = parseInt(deliverie.distance / 500);
     deliverie.commission.convargo = commission - deliverie.commission.treasury - deliverie.commission.insurance;
     return deliverie;
 }
 function ApplyDeductibleOption(deliverie){
-    deliverie.options.deductibleReduction = true;
-    deliverie.price += deliverie.volume;
+    if(deliverie.options.deductibleReduction){
+        deliverie.price += deliverie.volume;
+    }
     return deliverie;
+}
+function UpdateActors(){
+    var deliverie;
+    actors.forEach(function(actor){
+        deliverie = deliveries.find(function(element){
+            if(element.id == actor.deliveryId){
+                return element;
+            }
+        });
+        actor.payment.find(function(element){
+            if(element.who == "shipper"){
+                element.amount = deliverie.price;
+            }
+            else if(element.who == "trucker"){
+                element.amount = deliverie.price * 0.7;
+            }
+            else if(element.who == "treasury"){
+                element.amount = deliverie.commission.treasury
+            }
+            else if(element.who == "insurance"){
+                element.amount = deliverie.commission.insurance;
+            }
+            else if(element.who == "convargo"){
+                element.amount = deliverie.commission.convargo;
+            }
+        });
+    });
 }
 
 
 
 
-
-ComputePrice();
+UpdateAllValues();
 
 
 //console.log(truckers);
 console.log(deliveries);
-//console.log(actors);
-
-
-
+console.log(actors);
