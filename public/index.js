@@ -148,33 +148,32 @@ const actors = [{
 
 function ComputePrice(){
     deliveries.forEach(function(deliverie){
-        deliverie.price = GetPriceBase(deliverie);
-        deliverie.price = GetPriceRemise(deliverie);
+        deliverie.price = GetPrice(deliverie);
         deliverie = UpdateCommission(deliverie);
         deliverie = ApplyDeductibleOption(deliverie);
     });
 }
 
-function GetPriceBase(deliverie){
-    var distance, volume, trucker;
+function GetPrice(deliverie){
+    var distance, volume, trucker, volumePrice;
     trucker = truckers.find(function(element){
         return element.id = deliverie.truckerId;
     });
     distance = trucker.pricePerKm * deliverie.distance;
-    volume = trucker.pricePerVolume * deliverie.volume;
-    return distance + volume;
-}
-function GetPriceRemise(deliverie){
     if(deliverie.volume > 25){
-        return deliverie.price * 0.5;
+        volumePrice = trucker.pricePerVolume - (trucker.pricePerVolume * 0.5);
     }
     else if(deliverie.volume > 10){
-        return deliverie.price * 0.3;
+        volumePrice = trucker.pricePerVolume - (trucker.pricePerVolume * 0.3);
     }
     else if(deliverie.volume > 5){
-        return deliverie.price * 0.1;
+        volumePrice = trucker.pricePerVolume - (trucker.pricePerVolume * 0.1);
     } 
-    return deliverie.price;
+    else{
+        volumePrice = trucker.pricePerVolume;
+    }
+    volume = trucker.pricePerVolume * deliverie.volume;
+    return distance + volume;
 }
 function UpdateCommission(deliverie){
     var commission = deliverie.price * 0.3;
