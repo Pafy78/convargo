@@ -158,10 +158,22 @@ function Step1(){
         deliverie.price = distance + volume;
     });
 }
-
+function Step2(){
+    deliveries.forEach(function(deliverie){
+        if(deliverie.volume > 25){
+            deliverie.price -= deliverie.price * 0.5;
+        }
+        else if(deliverie.volume > 10){
+            deliverie.price -= deliverie.price * 0.3;
+        }
+        else if(deliverie.volume > 5){
+            deliverie.price -= deliverie.price * 0.1;
+        }
+    }); 
+}
 
 Step1();
-
+Step2();
 
 
 console.log(truckers);
