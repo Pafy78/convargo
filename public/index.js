@@ -144,6 +144,29 @@ const actors = [{
   }]
 }];
 
+
+
+
+function Step1(){
+    var distance, volume, trucker;
+    deliveries.forEach(function(deliverie){
+        trucker = truckers.find(function(element){
+            return element.id = deliverie.truckerId;
+        });
+        distance = trucker.pricePerKm * deliverie.distance;
+        volume = trucker.pricePerVolume * deliverie.volume;
+        deliverie.price = distance + volume;
+    });
+}
+
+
+Step1();
+
+
+
 console.log(truckers);
 console.log(deliveries);
 console.log(actors);
+
+
+
