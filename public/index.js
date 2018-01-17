@@ -151,6 +151,7 @@ function ComputePrice(){
         deliverie.price = GetPriceBase(deliverie);
         deliverie.price = GetPriceRemise(deliverie);
         deliverie = UpdateCommission(deliverie);
+        deliverie = ApplyDeductibleOption(deliverie);
     });
 }
 
@@ -181,6 +182,11 @@ function UpdateCommission(deliverie){
     deliverie.commission.insurance = commission / 2;
     deliverie.commission.treasury = parseInt(deliverie.distance / 500);
     deliverie.commission.convargo = commission - deliverie.commission.treasury - deliverie.commission.insurance;
+    return deliverie;
+}
+function ApplyDeductibleOption(deliverie){
+    deliverie.options.deductibleReduction = true;
+    deliverie.price += deliverie.volume;
     return deliverie;
 }
 
