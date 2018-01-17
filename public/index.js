@@ -150,8 +150,10 @@ function ComputePrice(){
     deliveries.forEach(function(deliverie){
         deliverie.price = GetPriceBase(deliverie);
         deliverie.price = GetPriceRemise(deliverie);
+        deliverie = UpdateCommission(deliverie);
     });
 }
+
 function GetPriceBase(deliverie){
     var distance, volume, trucker;
     trucker = truckers.find(function(element){
@@ -173,6 +175,15 @@ function GetPriceRemise(deliverie){
     } 
     return deliverie.price;
 }
+function UpdateCommission(deliverie){
+    var commission = deliverie.price * 0.3;
+    
+    deliverie.commission.insurance = commission / 2;
+    deliverie.commission.treasury = parseInt(deliverie.distance / 500);
+    deliverie.commission.convargo = commission - deliverie.commission.treasury - deliverie.commission.insurance;
+    return deliverie;
+}
+
 
 
 
